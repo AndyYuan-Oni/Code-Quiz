@@ -36,6 +36,11 @@ $(document).ready(function() {
     var currentQuestion = questions[currentQuestionIndex];
     var currentChoice = currentQuestion.choices;
     var nextQuestionIndex = currentQuestionIndex - 1;
+    var sel0 = $(".select0");
+    var sel1 = $(".select1");
+    var sel2 = $(".select2");
+    var sel3 = $(".select3");
+    var questionTitle = $(".Qtitle");
 
     function countDown() {
         var count = setInterval(timeDispaly(), 1000);
@@ -60,7 +65,13 @@ $(document).ready(function() {
 
 
     function nextquestion() {
-        if (nextQuestionIndex <= (questions.length - 1)) {
+        questionTitle.text(currentQuestion.title);
+        sel1.text(currentChoice[0]);
+        sel1.text(currentChoice[1]);
+        sel1.text(currentChoice[2]);
+        sel1.text(currentChoice[3]);
+
+        if (nextQuestionIndex <= questions.length - 1) {
             checker();
         } else {
             alert("done");
@@ -79,11 +90,11 @@ $(document).ready(function() {
     }
 
     function Display() {
-        displayBox.append("<h4>" + currentQuestion.title + "</h4>");
+        displayBox.append("<h4 class = \"Qtitle\">" + currentQuestion.title + "</h4>");
         displayBox.append("<div>Chose correct answer: </div>");
 
         for (var i = 0; i < 4; i++) {
-            displayBox.append("<button>" + currentChoice[i] + "</button>");
+            displayBox.append("<button class= \"select" + i + "\">" + currentChoice[i] + "</button>");
         };
 
         $("button").addClass("btn btn-primary ml-1 selections");
