@@ -28,22 +28,15 @@ $(document).ready(function() {
     ];
 
     var currentQuestionIndex = 0;
-    var totalSeconds = 50;
+    var totalSeconds = 15 * questions.length;
     var remainingSeconds = totalSeconds;
     var displayBox = $("#displayQ");
     var totalScore = 0;
     var chose = false;
-    var currentQuestion = questions[currentQuestionIndex];
-    var currentChoice = currentQuestion.choices;
     var nextQuestionIndex = currentQuestionIndex - 1;
-    var sel0 = $(".select0");
-    var sel1 = $(".select1");
-    var sel2 = $(".select2");
-    var sel3 = $(".select3");
-    var questionTitle = $(".Qtitle");
 
     function countDown() {
-        var count = setInterval(timeDispaly(), 1000);
+        var count = setInterval(timeDispaly, 1000);
 
         function timeDispaly() {
             remainingSeconds -= 1;
@@ -58,119 +51,72 @@ $(document).ready(function() {
     $("#start").on("click", function() {
         displayBox.empty();
         countDown();
-        Display();
-        clickEvent();
-        nextquestion();
+        Display(0);
     });
 
 
-    function nextquestion() {
-        questionTitle.text(currentQuestion.title);
-        sel1.text(currentChoice[0]);
-        sel1.text(currentChoice[1]);
-        sel1.text(currentChoice[2]);
-        sel1.text(currentChoice[3]);
+    function pgFinish() {
+        displayBox.
 
-        if (nextQuestionIndex <= questions.length - 1) {
-            checker();
-        } else {
-            alert("done");
-        }
-    }
+        saveCurrentScore();
 
-    function checker() {
-        if (chose == false) {
-            window.setTimeout(nextQuestionIndex, 100);
-        } else {
-            currentQuestionIndex = currentQuestionIndex + 1;
-            chose == false;
-            Display();
-            clickEvent();
-        }
-    }
+    };
 
-    function Display() {
-        displayBox.append("<h4 class = \"Qtitle\">" + currentQuestion.title + "</h4>");
+    function Display(currentQuestionIndex) {
+
+        if (currentQuestionIndex == questions.length) {
+            totalScore = totalScore;
+            displayBox.empty();
+
+            pgFinish();
+        };
+
+        displayBox.append("<h4 class = \"Qtitle\">" + questions[currentQuestionIndex].title + "</h4>");
         displayBox.append("<div>Chose correct answer: </div>");
-
         for (var i = 0; i < 4; i++) {
-            displayBox.append("<button class= \"select" + i + "\">" + currentChoice[i] + "</button>");
+            displayBox.append("<button class= \"select" + i + "\">" + questions[currentQuestionIndex].choices[i] + "</button>");
         };
 
         $("button").addClass("btn btn-primary ml-1 selections");
+        clickEvent();
+
+
     };
 
     function clickEvent() {
         $(".selections").on("click", function() {
-            if ($(this).text() == currentQuestion.answer) {
+            if ($(this).text() == questions[currentQuestionIndex].answer) {
                 displayBox.append("<hr>")
                 displayBox.append("<p>Correct!</p>");
                 totalScore = totalScore + 5;
             } else {
-                totalScore = totalScore - 5;
+                remainingSeconds = remainingSeconds - 5;
                 displayBox.append("<hr>")
                 displayBox.append("<p>Wrong!</p>");
             }
             chose = true;
             setTimeout(function() {
                 displayBox.empty();
+                currentQuestionIndex = currentQuestionIndex + 1;
+                Display(currentQuestionIndex);
             }, 600);
-
 
         });
     };
 
-
-
-    // Display the first question. 
-    // Get the first question. (currentQuestion = questions[currentQuestionIndex])
-    //render(currentQuestion)
-    // Set onClick for each choice button
-    // When any choice is clicked
-    // Get userChoice from button (which did user choose?)
-    // Compare userChoice with answer
-
-    // If correct
-    // Increment Score (score++)
-    // Else
-
-
-    // Alert user
-
-    // If there IS a nextQuestionIndex. (nextQuestionIndex = currentQuestionIndex + 1)
-    // If nextQuestionIndex == (question.length -1).
-    // Get the next question (nextQuestion = questions[nextQuestionIndex])
-    //render(nextQuestion)
-    // Else, means last question ALREADY finished
-    // stopTimer
-    // If remainingSeconds
-    // Add remainingSeconds to score
-    //saveCurrentScore(initial)
-
-    //function render(question) {
-    // titleEl = doc.getTitle
-    // choiceListEl = doc.getChoices
-    // question.getTitle
-    // question.getChoices
-    // question.getAnswer
-    // titleEl.text = questionTitle
-    // choiceListEl = questionChoices (involces appending <li> <li> <li> <li>)
-
-
-    //function renderTimer() {
-    // timeEl = doc.getTimeEl
-    // timeEl.setText = remainingSeconds
-
-
     function saveCurrentScore() {
-        // var initial = Ask for initials
+        var initial = prompt("What's your name?");
         // create a score object
+
+        currentScore.score = totalScore;
         var currentScore = {
-                "name": initial,
-                "score": score
-            }
-            // append currentScore to LocalStorage
-            // goToHighScorePage
+            "name": initial,
+            "score": score
+        }
+        localStorage.setItem(initial, currentScore);
+        // append currentScore to LocalStorage
+        // goToHighScorePage
+        window.location = "highscore.html";
     }
     /**
      *  On HighScore Page
