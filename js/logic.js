@@ -1,93 +1,113 @@
 $(document).ready(function() {
     var questions = [{
-            title: "Commonly used data types DO NOT include:",
+            title: "1. Commonly used data types DO NOT include:",
             choices: ["strings", "booleans", "alerts", "numbers"],
             answer: "alerts"
         },
         {
-            title: "The condition in an if / else statement is enclosed within ____.",
+            title: "2. The condition in an if / else statement is enclosed within ____.",
             choices: ["quotes", "curly brackets", "parentheses", "square brackets"],
             answer: "parentheses"
         },
+        {
+            title: "3. Commonly used data types DO NOT include:",
+            choices: ["strings", "booleans", "alerts", "numbers"],
+            answer: "alerts"
+        },
+        {
+            title: "4. The condition in an if / else statement is enclosed within ____.",
+            choices: ["quotes", "curly brackets", "parentheses", "square brackets"],
+            answer: "parentheses"
+        },
+        {
+            title: "5. Commonly used data types DO NOT include:",
+            choices: ["strings", "booleans", "alerts", "numbers"],
+            answer: "alerts"
+        }
         ///etc.
     ];
-    //50sec count down timer fucntion
 
-    //welcome function
-    //append questions
-    //on click reset variables
-    //show timer countdown
-    //result fucntion save to local storage
     var currentQuestionIndex = 0;
-    var totalSeconds = 90;
+    var totalSeconds = 50;
     var remainingSeconds = totalSeconds;
     var displayBox = $("#displayQ");
     var totalScore = 0;
     var chose = false;
-    // startButton onClick
-    // Hide startButton
+    var currentQuestion = questions[currentQuestionIndex];
+    var currentChoice = currentQuestion.choices;
+    var nextQuestionIndex = currentQuestionIndex - 1;
 
-    // startCountDown (totalSeconds), inside of the interval function
     function countDown() {
-        setInterval(function() {
-            remainingSeconds--;
-        }, 1000);
-        if (remainingSeconds = 0) {
-            clearInterval(interval);
-        };
-        //saveCurrentScore(initial);
+        var count = setInterval(timeDispaly(), 1000);
+
+        function timeDispaly() {
+            remainingSeconds -= 1;
+            $("#timer").text("Time: " + remainingSeconds);
+            console.log("1");
+            if (remainingSeconds <= 0) {
+                clearInterval(count);
+            };
+        }
     };
-    // remainingSeconds --
-    // If time finished
-    // stopTimer
-    //saveCurrentScore(initial) {}
-    // Else
-    //function renderTimer() {};
+
     $("#start").on("click", function() {
         displayBox.empty();
         countDown();
         Display();
+        clickEvent();
+        nextquestion();
     });
 
+
+    function nextquestion() {
+        if (nextQuestionIndex <= (questions.length - 1)) {
+            checker();
+        } else {
+            alert("done");
+        }
+    }
+
+    function checker() {
+        if (chose == false) {
+            window.setTimeout(nextQuestionIndex, 100);
+        } else {
+            currentQuestionIndex = currentQuestionIndex + 1;
+            chose == false;
+            Display();
+            clickEvent();
+        }
+    }
+
     function Display() {
-        var currentQuestion = questions[currentQuestionIndex]
-        var currentChoice = currentQuestion.choices
-
-
-
         displayBox.append("<h4>" + currentQuestion.title + "</h4>");
         displayBox.append("<div>Chose correct answer: </div>");
 
-        for (i = 0; i < 4; i++) {
+        for (var i = 0; i < 4; i++) {
             displayBox.append("<button>" + currentChoice[i] + "</button>");
         };
 
         $("button").addClass("btn btn-primary ml-1 selections");
-        //onclick selection buttons
+    };
+
+    function clickEvent() {
         $(".selections").on("click", function() {
-
-
-            if (chose == false) {
-                if ($(this).text() == currentQuestion.answer) {
-                    displayBox.append("<hr>")
-                    displayBox.append("<p>Correct!</p>");
-                    totalScore = totalScore + 5;
-                } else {
-                    remainingSeconds = remainingSeconds - 5;
-                    displayBox.append("<hr>")
-                    displayBox.append("<p>Wrong!</p>");
-
-                }
+            if ($(this).text() == currentQuestion.answer) {
+                displayBox.append("<hr>")
+                displayBox.append("<p>Correct!</p>");
+                totalScore = totalScore + 5;
+            } else {
+                totalScore = totalScore - 5;
+                displayBox.append("<hr>")
+                displayBox.append("<p>Wrong!</p>");
             }
             chose = true;
             setTimeout(function() {
                 displayBox.empty();
             }, 600);
 
-            currentQuestionIndex = currentQuestionIndex + 1;
+
         });
     };
-
 
 
 
