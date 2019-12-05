@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Code Quiz</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
@@ -11,21 +12,22 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-light bg-light">
+    <nav class="navbar navbar-light bg-light navbar-expand-lg">
         <a class="navbar-brand" href="highscore.html">High Score</a>
         <span class="navbar-text ml-auto">Time: <span id="timer"></span></span>
+
     </nav>
     <div class="container">
         <div class="row">
-            <div class="col-sm-2"></div>
-            <div class="col-sm-8">
+            <div class="col-md-2 col-sm-0"></div>
+            <div class="col-md-8 col-sm-12">
                 <div class="mt-5 " id="displayQ">
                     <h3 class="">Do you want to take a quiz?</h3>
                     <p class="">The following quiz contains several questions and with limited time to answer.</p>
                     <button class="btn btn-primary" id="start" type="button">Take Quiz!</button>
                 </div>
             </div>
-            <div class="col-sm-2"></div>
+            <div class="col-md-2 col-sm-0"></div>
         </div>
     </div>
 
