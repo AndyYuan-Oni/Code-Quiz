@@ -69,6 +69,7 @@ $(document).ready(function() {
 
             saveCurrentScore(playerInput);
             window.location = "highscore.html";
+
         });
 
     };
@@ -121,14 +122,14 @@ $(document).ready(function() {
 
     function saveCurrentScore(playerInput) {
         // create a score object
-        var newInput = [{
+        var newInput = {
             "name": playerInput,
             "score": totalScore
-        }];
+        };
         var highscore = JSON.parse(localStorage.getItem("highscore"));
 
         if (highscore == null) {
-            highscore = newInput;
+            highscore = [newInput];
             localStorage.setItem("highscore", JSON.stringify(highscore));
         } else {
             highscore.push(newInput);
@@ -138,20 +139,25 @@ $(document).ready(function() {
     /**
      *  On HighScore Page
      */
-    getHighScores();
+
     // getHighScores from LocalStorage
     // Sort
 
     function getHighScores() {
+
         var listEl = $("#highscore");
-        for (i = 0; i < highscore.length; i++) {
-            listEl.append("<li>" + highscore[i].name + "-" + highscore[i].score + "</li>");
+        var scorelist = JSON.parse(localStorage.getItem("highscore"));
+        console.log(highscore);
+        for (i = 0; i < scorelist.length; i++) {
+            console.log(scorelist[i].name);
+            listEl.append("<li>" + scorelist[i].name + " - " + scorelist[i].score + "</li>");
         };
 
     }
+    $("#highscore").on("load", getHighScores());
 
     $(".clearAll").on("click", function() {
         $("#highscore").empty();
-        highscore = [];
+        localStorage.removeItem("highscore");
     })
 });
