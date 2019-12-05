@@ -34,16 +34,17 @@ $(document).ready(function() {
     var totalScore = 0;
     var chose = false;
     var nextQuestionIndex = currentQuestionIndex - 1;
+    var highscore = [];
 
     function countDown() {
         var count = setInterval(timeDispaly, 1000);
 
         function timeDispaly() {
             remainingSeconds -= 1;
-            $("#timer").text("Time: " + remainingSeconds);
-            console.log("1");
+            $("#timer").text(remainingSeconds);
             if (remainingSeconds <= 0) {
                 clearInterval(count);
+                pgFinish()
             };
         }
     };
@@ -56,29 +57,43 @@ $(document).ready(function() {
 
 
     function pgFinish() {
-        displayBox.
+        displayBox.append("<h4>Type Your Name In</h4>")
+        displayBox.append("<input>");
+        displayBox.append("<br>");
+        displayBox.append("<button class=\"btn btn-primary m-3 submit\">Submit</button>");
 
-        saveCurrentScore();
+        console.log(totalScore);
+
+        $(".submit").on("click", function() {
+            var playerInput = $("input").val();
+
+            saveCurrentScore(playerInput);
+            window.location = "highscore.html";
+        });
 
     };
 
+
+
     function Display(currentQuestionIndex) {
 
-        if (currentQuestionIndex == questions.length) {
-            totalScore = totalScore;
+        if (currentQuestionIndex >= questions.length) {
+            totalScore = totalScore + remainingSeconds;
             displayBox.empty();
+            remainingSeconds = 1;
+        } else {
+            displayBox.append("<h4 class = \"Qtitle\">" + questions[currentQuestionIndex].title + "</h4>");
+            displayBox.append("<div>Chose correct answer: </div>");
 
-            pgFinish();
-        };
+            for (var i = 0; i < 4; i++) {
+                displayBox.append("<button class= \"select" + i + "\">" + questions[currentQuestionIndex].choices[i] + "</button>");
+            };
 
-        displayBox.append("<h4 class = \"Qtitle\">" + questions[currentQuestionIndex].title + "</h4>");
-        displayBox.append("<div>Chose correct answer: </div>");
-        for (var i = 0; i < 4; i++) {
-            displayBox.append("<button class= \"select" + i + "\">" + questions[currentQuestionIndex].choices[i] + "</button>");
-        };
+            $("button").addClass("btn btn-primary ml-1 selections");
+            clickEvent();
 
-        $("button").addClass("btn btn-primary ml-1 selections");
-        clickEvent();
+        }
+
 
 
     };
@@ -88,9 +103,9 @@ $(document).ready(function() {
             if ($(this).text() == questions[currentQuestionIndex].answer) {
                 displayBox.append("<hr>")
                 displayBox.append("<p>Correct!</p>");
-                totalScore = totalScore + 5;
+                totalScore += 5;
             } else {
-                remainingSeconds = remainingSeconds - 5;
+                remainingSeconds = remainingSeconds - 10;
                 displayBox.append("<hr>")
                 displayBox.append("<p>Wrong!</p>");
             }
@@ -104,43 +119,39 @@ $(document).ready(function() {
         });
     };
 
-    function saveCurrentScore() {
-        var initial = prompt("What's your name?");
+    function saveCurrentScore(playerInput) {
         // create a score object
+        var newInput = [{
+            "name": playerInput,
+            "score": totalScore
+        }];
+        var highscore = JSON.parse(localStorage.getItem("highscore"));
 
-        currentScore.score = totalScore;
-        var currentScore = {
-            "name": initial,
-            "score": score
+        if (highscore == null) {
+            highscore = newInput;
+            localStorage.setItem("highscore", JSON.stringify(highscore));
+        } else {
+            highscore.push(newInput);
+            localStorage.setItem("highscore", JSON.stringify(highscore));
         }
-        localStorage.setItem(initial, currentScore);
-        // append currentScore to LocalStorage
-        // goToHighScorePage
-        window.location = "highscore.html";
     }
     /**
      *  On HighScore Page
      */
-    //function getHighScores() {
+    getHighScores();
     // getHighScores from LocalStorage
     // Sort
 
-    //getHighScores()
-    //renderList()
-    // Display highScores
-    // renderList()
-    // clearButton.onClick
-    // clear LocalStorage
-    // alert user
-    // If we are staying on the page
-    //getHighScores() // return []
-    //renderList() // renders empty list
-    // Else we are going back to gamePage
-    // goBack to GamePage
-    // renderList()
-    // getListEl
-    // for each highScore (from LocalStorage)
-    // create <li>
-    // li.text = highScore
-    // listEl.appendChild(li)
+    function getHighScores() {
+        var listEl = $("#highscore");
+        for (i = 0; i < highscore.length; i++) {
+            listEl.append("<li>" + highscore[i].name + "-" + highscore[i].score + "</li>");
+        };
+
+    }
+
+    $(".clearAll").on("click", function() {
+        $("#highscore").empty();
+        highscore = [];
+    })
 });
